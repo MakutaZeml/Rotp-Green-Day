@@ -1,0 +1,29 @@
+{
+  "entity.rotp_zgd.green_day": "Green Day",
+  "stand.rotp_zgd.green_day": "Green Day",
+
+  "action.rotp_zgd.gd_punch": "Punch",
+  "action.rotp_zgd.gd_heavy_punch": "Heavy Punch",
+  "action.rotp_zgd.gd_barrage": "Barrage",
+  "action.rotp_zgd.gd_combo_punch": "Finisher",
+  "action.rotp_zgd.gd_shot_left_arm": "Shot left arm",
+  "action.rotp_zgd.gd_shot_right_arm": "Shot right arm",
+
+  "action.rotp_zgd.gd_block": "Block",
+  "action.rotp_zgd.gd_mold": "It is molding time",
+  "action.rotp_zgd.gd_heal": "Heal wounds",
+
+  "effect.rotp_zgd.mold": "Mold",
+  "effect.rotp_zgd.mold_util": "Mold Infestation",
+
+  "rotp_zgd.subtitle.mold": "Green Day mold",
+  "rotp_zgd.subtitle.green_day": "Green Day",
+
+
+  "effect.rotp_zgd.right_armless": "Right Armless",
+  "effect.rotp_zgd.left_armless": "Left Armless",
+
+
+  "rotp_zgd.left": "left",
+  "rotp_zgd.right": "right"
+}
