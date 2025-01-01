@@ -60,12 +60,13 @@ public class GameplayHandler {
     }
 
 
+    /*
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onDeleteEvent(LivingEvent.LivingUpdateEvent event){
-        LivingEntity living = event.getEntityLiving();
-        if(!living.level.isClientSide){
-            IStandPower.getStandPowerOptional(living).ifPresent(power -> {
-                LazyOptional<LivingData> playerDataOptional = living.getCapability(LivingDataProvider.CAPABILITY);
+        LivingEntity user = event.getEntityLiving();
+        if(!user.level.isClientSide){
+            IStandPower.getStandPowerOptional(user).ifPresent(power -> {
+                LazyOptional<LivingData> playerDataOptional = user.getCapability(LivingDataProvider.CAPABILITY);
                 playerDataOptional.ifPresent(playerData ->{
                     StandType<?> GD = InitStands.GREEN_DAY_STAND.getStandType();
                     if(power.getType() != GD){
@@ -77,7 +78,7 @@ public class GameplayHandler {
                             playerData.setMoldActivated(false);
                         }else {
                             if(playerData.isMoldActivated()){
-                                List<LivingEntity> set = MCUtil.entitiesAround(LivingEntity.class,living,256,false,LivingEntity::isAlive);
+                                List<LivingEntity> set = MCUtil.entitiesAround(LivingEntity.class,user,256,false,LivingEntity::isAlive);
                                 if(!set.isEmpty()){
                                     set.forEach(entity -> {
                                         if(!entity.hasEffect(InitStatusEffect.MOLD_UTIL_EFFECT.get())){
@@ -98,6 +99,7 @@ public class GameplayHandler {
             });
         }
     }
+     */
 
 
     @SubscribeEvent
