@@ -58,7 +58,7 @@ public class MoldUtilEffect extends MoldEffect implements IApplicableEffect {
                 living.addEffect(new EffectInstance(Effects.CONFUSION ,20,amplifier-4,false,false,false));
 
             }
-            List<GreenDayStandEntity> list = MCUtil.entitiesAround(GreenDayStandEntity.class,living,256,false, greenDayStandEntity -> greenDayStandEntity.isAlive() && greenDayStandEntity.getUser() != living);
+            List<GreenDayStandEntity> list = MCUtil.entitiesAround(GreenDayStandEntity.class,living,20,false, greenDayStandEntity -> greenDayStandEntity.isAlive() && greenDayStandEntity.getUser() != living);
             if(!list.isEmpty()){
                 list.forEach(greenDayStandEntity -> {
                     LivingEntity owner = greenDayStandEntity.getUser();

@@ -4,7 +4,19 @@ import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityType;
 
 import com.github.standobyte.jojo.entity.stand.StandRelativeOffset;
+import com.github.standobyte.jojo.power.impl.stand.IStandPower;
+import com.github.standobyte.jojo.power.impl.stand.type.StandType;
+import com.github.standobyte.jojo.util.mc.MCUtil;
+import com.zeml.rotp_zgd.capability.entity.LivingData;
+import com.zeml.rotp_zgd.capability.entity.LivingDataProvider;
+import com.zeml.rotp_zgd.init.InitStands;
+import com.zeml.rotp_zgd.init.InitStatusEffect;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.LazyOptional;
+
+import java.util.List;
 
 public class GreenDayStandEntity extends StandEntity {
     
@@ -13,6 +25,48 @@ public class GreenDayStandEntity extends StandEntity {
     }
 
 
+    @Override
+    public void tick() {
+        super.tick();
+        if(!this.level.isClientSide){
+            if(this.getUser() != null){
+                LivingEntity user = this.getUser();
+                IStandPower.getStandPowerOptional(user).ifPresent(power -> {
+                    LazyOptional<LivingData> playerDataOptional = user.getCapability(LivingDataProvider.CAPABILITY);
+                    playerDataOptional.ifPresent(playerData ->{
+                        StandType<?> GD = InitStands.GREEN_DAY_STAND.getStandType();
+                        if(power.getType() != GD){
+                            if(!playerData.isMoldActivated()){
+                                playerData.setMoldActivated(false);
+                            }
+                        }else {
+                            if(!(power.getStandManifestation() instanceof StandEntity)){
+                                playerData.setMoldActivated(false);
+                            }else {
+                                if(playerData.isMoldActivated()){
+                                    List<LivingEntity> set = MCUtil.entitiesAround(LivingEntity.class,user,128,false,LivingEntity::isAlive);
+                                    if(!set.isEmpty()){
+                                        set.forEach(entity -> {
+                                            if(!entity.hasEffect(InitStatusEffect.MOLD_UTIL_EFFECT.get())){
+                                                if(!(entity instanceof StandEntity)){
+                                                    entity.addEffect(new EffectInstance(InitStatusEffect.MOLD_UTIL_EFFECT.get(),Integer.MAX_VALUE,0,false,false,false));
+                                                }
+                                            }
+                                        });
+                                    }
+                                    power.consumeStamina(1);
+                                    if(power.getStamina() == 0){
+                                        playerData.setMoldActivated(false);
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+            }
+
+        }
+    }
 
     private final StandRelativeOffset offsetDefault = StandRelativeOffset.withYOffset(0, .5, -.75);
 
