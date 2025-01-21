@@ -1,8 +1,7 @@
 package com.zeml.rotp_zgd.capability.entity;
 
+import com.zeml.rotp_zgd.init.InitStatusEffect;
 import com.zeml.rotp_zgd.network.AddonPackets;
-import com.zeml.rotp_zgd.network.server.ArmLeftPacket;
-import com.zeml.rotp_zgd.network.server.ArmRightPacket;
 import com.zeml.rotp_zgd.network.server.SetMaxBlockPacket;
 import com.zeml.rotp_zgd.network.server.SetMoldActivePacket;
 import net.minecraft.entity.LivingEntity;
@@ -16,8 +15,8 @@ public class LivingData implements INBTSerializable<CompoundNBT> {
     private int ticksInMold = 0;
     private int ticksWithoutMold = 0;
     private boolean moldActivated = false;
-    private boolean hasRightArm = true;
-    private boolean hasLeftArm = true;
+//    private boolean hasRightArm = true;
+//    private boolean hasLeftArm = true;
     public LivingData(LivingEntity entity) {
         this.entity = entity;
 
@@ -61,27 +60,27 @@ public class LivingData implements INBTSerializable<CompoundNBT> {
         return moldActivated;
     }
 
-    public void setHasRightArm(boolean hasRightArm) {
-        this.hasRightArm = hasRightArm;
-        if(entity instanceof ServerPlayerEntity){
-            AddonPackets.sendToClient(new ArmRightPacket(entity.getId(),hasRightArm),(ServerPlayerEntity) entity);
-        }
-    }
+//    public void setHasRightArm(boolean hasRightArm) {
+//        this.hasRightArm = hasRightArm;
+//        if(entity instanceof ServerPlayerEntity){
+//            AddonPackets.sendToClient(new ArmRightPacket(entity.getId(),hasRightArm),(ServerPlayerEntity) entity);
+//        }
+//    }
 
     public boolean isHasRightArm() {
-        return this.hasRightArm;
+        return !entity.hasEffect(InitStatusEffect.RIGHT_ARMLESS.get());
     }
 
-    public void setHasLeftArm(boolean hasLeftArm) {
-        this.hasLeftArm = hasLeftArm;
-        if(entity instanceof ServerPlayerEntity){
-            AddonPackets.sendToClient(new ArmLeftPacket(entity.getId(),hasLeftArm),(ServerPlayerEntity) entity);
-
-        }
-    }
+//    public void setHasLeftArm(boolean hasLeftArm) {
+//        this.hasLeftArm = hasLeftArm;
+//        if(entity instanceof ServerPlayerEntity){
+//            AddonPackets.sendToClient(new ArmLeftPacket(entity.getId(),hasLeftArm),(ServerPlayerEntity) entity);
+//
+//        }
+//    }
 
     public boolean isHasLeftArm() {
-        return this.hasLeftArm;
+        return !entity.hasEffect(InitStatusEffect.LEFT_ARMLESS.get());
     }
 
     public void syncWithAnyPlayer(ServerPlayerEntity player) {
@@ -93,8 +92,6 @@ public class LivingData implements INBTSerializable<CompoundNBT> {
     public void syncWithEntityOnly(ServerPlayerEntity player) {
         AddonPackets.sendToClient(new SetMaxBlockPacket(player.getId(),maxBlock),player);
         AddonPackets.sendToClient(new SetMoldActivePacket(player.getId(),moldActivated),player);
-        AddonPackets.sendToClient(new ArmRightPacket(player.getId(),hasRightArm),player);
-        AddonPackets.sendToClient(new ArmLeftPacket(player.getId(),hasLeftArm),player);
     }
 
     @Override
@@ -104,8 +101,8 @@ public class LivingData implements INBTSerializable<CompoundNBT> {
         nbt.putInt("ticksInMold",this.ticksInMold);
         nbt.putInt("ticksWithoutMold",this.ticksWithoutMold);
         nbt.putBoolean("MoldActive", this.moldActivated);
-        nbt.putBoolean("hasRightArm",this.hasRightArm);
-        nbt.putBoolean("hasLeftArm",this.hasLeftArm);
+//        nbt.putBoolean("hasRightArm",this.hasRightArm);
+//        nbt.putBoolean("hasLeftArm",this.hasLeftArm);
 
         return nbt;
     }
@@ -116,7 +113,7 @@ public class LivingData implements INBTSerializable<CompoundNBT> {
         this.ticksInMold = nbt.getInt("ticksInMold");
         this.ticksWithoutMold = nbt.getInt("ticksWithoutMold");
         this.moldActivated = nbt.getBoolean("MoldActive");
-        this.hasLeftArm = nbt.getBoolean("hasLeftArm");
-        this.hasRightArm = nbt.getBoolean("hasRightArm");
+//        this.hasLeftArm = nbt.getBoolean("hasLeftArm");
+//        this.hasRightArm = nbt.getBoolean("hasRightArm");
     }
 }

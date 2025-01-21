@@ -33,6 +33,7 @@ import java.util.Set;
 public class GameplayHandler {
 
 
+    /*
     @SubscribeEvent(priority =  EventPriority.LOW)
     public static void ArmlessRender(LivingEvent.LivingUpdateEvent event){
         LivingEntity entity = event.getEntityLiving();
@@ -58,6 +59,7 @@ public class GameplayHandler {
             });
         }
     }
+    */
 
 
     /*

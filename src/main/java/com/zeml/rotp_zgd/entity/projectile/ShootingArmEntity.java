@@ -7,6 +7,8 @@ import com.zeml.rotp_zgd.capability.entity.LivingData;
 import com.zeml.rotp_zgd.capability.entity.LivingDataProvider;
 import com.zeml.rotp_zgd.init.InitEntities;
 import com.zeml.rotp_zgd.init.InitSounds;
+import com.zeml.rotp_zgd.init.InitStatusEffect;
+
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -14,6 +16,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
@@ -74,25 +77,43 @@ public class ShootingArmEntity extends ModdedProjectileEntity {
                 });
             }
         }
+        
+        if (!this.level.isClientSide()) {
+            LivingEntity owner = getOwner();
+            if (owner != null) {
+                if (this.isRight) {
+                    owner.addEffect(new EffectInstance(InitStatusEffect.RIGHT_ARMLESS.get(), Integer.MAX_VALUE, 0, false, false, false));
+                }
+                else {
+                    owner.addEffect(new EffectInstance(InitStatusEffect.LEFT_ARMLESS.get(), Integer.MAX_VALUE, 0, false, false, false));
+                }
+            }
+        }
     }
 
     @Override
     public void playerTouch(PlayerEntity player) {
-        if(!player.level.isClientSide){
-            if( this.getOwner() != null && player == this.getOwner() && (this.isOnGround()|| this.onGround)){
-                LazyOptional<LivingData> livingDataOptional = player.getCapability(LivingDataProvider.CAPABILITY);
-                livingDataOptional.ifPresent(data ->{
-                    if(this.isRight){
-                        data.setHasRightArm(true);
-                    }else {
-                        data.setHasLeftArm(true);
-                    }
-                });
+        if (player == this.getOwner() && this.isOnGround()) {
+            if (!player.level.isClientSide){
                 this.remove();
+            } else {
+                player.playSound(SoundEvents.ITEM_PICKUP, 1, 1);
             }
-        }else {
-            if( this.getOwner() != null && player == this.getOwner() && (this.isOnGround()|| this.onGround)){
-                player.playSound(SoundEvents.ITEM_PICKUP,1F,1F);
+        }
+    }
+    
+    @Override
+    public void onRemovedFromWorld() {
+        super.onRemovedFromWorld();
+        if (!this.level.isClientSide()) {
+            LivingEntity owner = getOwner();
+            if (owner != null) {
+                if (this.isRight) {
+                    owner.removeEffect(InitStatusEffect.RIGHT_ARMLESS.get());
+                }
+                else {
+                    owner.removeEffect(InitStatusEffect.LEFT_ARMLESS.get());
+                }
             }
         }
     }

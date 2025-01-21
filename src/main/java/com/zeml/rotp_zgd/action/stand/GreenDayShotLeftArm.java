@@ -42,7 +42,6 @@ public class GreenDayShotLeftArm extends StandAction {
                     arm.shootFromRotation(user,1.5F,.3F);
                     world.addFreshEntity(arm);
                     arm.setNoGravity(false);
-                    livingData.setHasLeftArm(false);
                 }
             });
         }

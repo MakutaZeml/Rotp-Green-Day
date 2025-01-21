@@ -1,5 +1,8 @@
 package com.zeml.rotp_zgd;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.zeml.rotp_zgd.capability.entity.CapabilityHandler;
 import com.zeml.rotp_zgd.init.*;
 import com.zeml.rotp_zgd.network.AddonPackets;
@@ -33,6 +36,7 @@ public class RotpGreenDayAddon {
         AddonPackets.init();
         CapabilityHandler.commonSetupRegister();
         InitTags.iniTags();
+        InitStatusEffect.afterEffectsRegister();
     }
 
     public static Logger getLogger() {
