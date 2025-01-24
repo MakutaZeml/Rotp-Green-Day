@@ -47,7 +47,6 @@ public class ClientInit {
             mc.getEntityRenderDispatcher().renderers.values().forEach(ClientInit::addLayersToEntities);
 
             MarkerRenderer.Handler.addRenderer(new HandMarker(mc));
-            PlayerAnimationHandler.initAnimator();
         });
 
     }

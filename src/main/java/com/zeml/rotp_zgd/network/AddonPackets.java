@@ -2,8 +2,6 @@ package com.zeml.rotp_zgd.network;
 
 import com.github.standobyte.jojo.network.packets.IModPacketHandler;
 import com.zeml.rotp_zgd.RotpGreenDayAddon;
-import com.zeml.rotp_zgd.network.server.ArmLeftPacket;
-import com.zeml.rotp_zgd.network.server.ArmRightPacket;
 import com.zeml.rotp_zgd.network.server.SetMaxBlockPacket;
 import com.zeml.rotp_zgd.network.server.SetMoldActivePacket;
 import net.minecraft.entity.Entity;
@@ -44,12 +42,6 @@ public class AddonPackets {
                 Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         channel.registerMessage(packetIndex++, SetMoldActivePacket.class,
                 SetMoldActivePacket::encode,SetMoldActivePacket::decode,SetMoldActivePacket::handle,
-                Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-        channel.registerMessage(packetIndex++, ArmRightPacket.class,
-                ArmRightPacket::encode,ArmRightPacket::decode,ArmRightPacket::handle,
-                Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-        channel.registerMessage(packetIndex++, ArmLeftPacket.class,
-                ArmLeftPacket::encode,ArmLeftPacket::decode,ArmLeftPacket::handle,
                 Optional.of(NetworkDirection.PLAY_TO_CLIENT));
     }
 

@@ -1,6 +1,6 @@
 package com.zeml.rotp_zgd.init;
 
-import com.github.standobyte.jojo.JojoMod;
+import com.github.standobyte.jojo.init.ModStatusEffects;
 import com.zeml.rotp_zgd.RotpGreenDayAddon;
 import com.zeml.rotp_zgd.effects.LeftArmLessEffect;
 import com.zeml.rotp_zgd.effects.MoldEffect;
@@ -30,5 +30,12 @@ public class InitStatusEffect {
 
     public static final RegistryObject<Effect> LEFT_ARMLESS = EFFECTS.register("left_armless",
             ()->new LeftArmLessEffect(0xFF0000));
+    
+    
+    public static void afterEffectsRegister() {
+        ModStatusEffects.setEffectAsTracked(
+                RIGHT_ARMLESS.get(), 
+                LEFT_ARMLESS.get());
+    }
 
 }
