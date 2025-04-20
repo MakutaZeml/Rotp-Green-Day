@@ -15,13 +15,21 @@ import com.zeml.rotp_zgd.init.InitStands;
 import com.zeml.rotp_zgd.init.InitStatusEffect;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.util.Hand;
+import net.minecraft.util.HandSide;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -31,7 +39,6 @@ import java.util.Set;
 
 @Mod.EventBusSubscriber(modid = RotpGreenDayAddon.MOD_ID)
 public class GameplayHandler {
-
 
     /*
     @SubscribeEvent(priority =  EventPriority.LOW)
@@ -147,4 +154,61 @@ public class GameplayHandler {
         }
     }
 
+
+    //Green Day Armless stuff
+
+    @SubscribeEvent
+    public static void onBlockBreak(PlayerEvent.BreakSpeed event){
+        LivingEntity entity = event.getEntityLiving();
+        if((entity.getMainArm() == HandSide.RIGHT && entity.hasEffect(InitStatusEffect.RIGHT_ARMLESS.get()))
+                ||(entity.getMainArm() == HandSide.LEFT && entity.hasEffect(InitStatusEffect.LEFT_ARMLESS.get()))){
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onItemPickup(EntityItemPickupEvent event){
+        LivingEntity entity = event.getEntityLiving();
+        if(entity.hasEffect(InitStatusEffect.RIGHT_ARMLESS.get()) && entity.hasEffect(InitStatusEffect.LEFT_ARMLESS.get())){
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onBlockPlace(BlockEvent.EntityPlaceEvent event){
+        if(event.getEntity() instanceof LivingEntity){
+            LivingEntity entity = (LivingEntity) event.getEntity();
+            if((entity.getMainArm() == HandSide.RIGHT && entity.hasEffect(InitStatusEffect.RIGHT_ARMLESS.get()))
+                    ||(entity.getMainArm() == HandSide.LEFT && entity.hasEffect(InitStatusEffect.LEFT_ARMLESS.get()))){
+                event.setCanceled(true);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onEntityAttack(LivingAttackEvent event){
+        LivingEntity entity = event.getEntityLiving();
+        if((entity.getMainArm() == HandSide.RIGHT && entity.hasEffect(InitStatusEffect.RIGHT_ARMLESS.get()))
+                ||(entity.getMainArm() == HandSide.LEFT && entity.hasEffect(InitStatusEffect.LEFT_ARMLESS.get()))){
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
+        LivingEntity entity = event.getEntityLiving();
+        Hand hand = event.getHand();
+        if((hand == Hand.MAIN_HAND && entity.getMainArm() == HandSide.RIGHT &&entity.hasEffect(InitStatusEffect.RIGHT_ARMLESS.get()))||
+                (hand == Hand.MAIN_HAND && entity.getMainArm() == HandSide.LEFT &&entity.hasEffect(InitStatusEffect.LEFT_ARMLESS.get()))){
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event){
+        LivingEntity entity = event.getEntityLiving();
+        if(entity.hasEffect(InitStatusEffect.RIGHT_ARMLESS.get()) && entity.hasEffect(InitStatusEffect.LEFT_ARMLESS.get())){
+            event.setCanceled(true);
+        }
+    }
 }

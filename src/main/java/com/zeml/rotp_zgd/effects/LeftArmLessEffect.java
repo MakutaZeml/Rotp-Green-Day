@@ -18,12 +18,14 @@ public class LeftArmLessEffect extends Effect {
     @Override
     public void applyEffectTick(LivingEntity entity, int amplifier) {
         if(!entity.level.isClientSide){
-            ItemStack itemStack = entity.getMainArm() == HandSide.LEFT ? entity.getMainHandItem():entity.getOffhandItem();
-            if(!itemStack.isEmpty()){
-                ItemEntity itemEntity = new ItemEntity(entity.level,entity.getX(),entity.getY(),entity.getZ(),itemStack);
-                itemEntity.setPickUpDelay(20);
-                entity.setItemInHand(entity.getMainArm() == HandSide.LEFT? Hand.MAIN_HAND:Hand.OFF_HAND,ItemStack.EMPTY);
-                entity.level.addFreshEntity(itemEntity);
+            if(entity.getMainArm() == HandSide.RIGHT){
+                ItemStack itemStack = entity.getOffhandItem();
+                if(!itemStack.isEmpty()){
+                    ItemEntity itemEntity = new ItemEntity(entity.level,entity.getX(),entity.getY(),entity.getZ(),itemStack);
+                    itemEntity.setPickUpDelay(60);
+                    entity.setItemInHand(Hand.OFF_HAND,ItemStack.EMPTY);
+                    entity.level.addFreshEntity(itemEntity);
+                }
             }
         }
     }

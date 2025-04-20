@@ -1,5 +1,7 @@
 package com.zeml.rotp_zgd.action.stand;
 
+import com.github.standobyte.jojo.action.ActionConditionResult;
+import com.github.standobyte.jojo.action.ActionTarget;
 import com.github.standobyte.jojo.action.non_stand.HamonHealing;
 import com.github.standobyte.jojo.action.stand.StandEntityAction;
 import com.github.standobyte.jojo.entity.stand.StandEntity;
@@ -18,6 +20,13 @@ public class HealMold extends StandEntityAction {
         super(builder);
     }
 
+    @Override
+    protected ActionConditionResult checkSpecificConditions(LivingEntity user, IStandPower power, ActionTarget target) {
+        if(user.hasEffect(ModStatusEffects.BLEEDING.get()) || user.getMaxHealth() != user.getHealth()){
+            return super.checkSpecificConditions(user, power, target);
+        }
+        return ActionConditionResult.NEGATIVE;
+    }
 
     @Override
     public void standTickPerform(World world, StandEntity standEntity, IStandPower userPower, StandEntityTask task) {
@@ -30,7 +39,7 @@ public class HealMold extends StandEntityAction {
                     MCUtil.reduceEffect(user,bleed,duration,1);
                     MCUtil.runCommand(user,"playsound rotp_zgd:gd_mold player @a ~ ~ ~");
                 }
-                user.heal(user.getMaxHealth()*.05F);
+                user.heal(user.getMaxHealth()*.25F);
             }
         }
     }
