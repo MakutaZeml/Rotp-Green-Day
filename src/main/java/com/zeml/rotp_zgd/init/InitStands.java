@@ -67,7 +67,7 @@ public class InitStands {
             ));
 
     public static final RegistryObject<StandEntityAction> MOLD_HEAL = ACTIONS.register("gd_heal",
-            () -> new HealMold(new StandEntityAction.Builder().resolveLevelToUnlock(2).staminaCostTick(6)
+            () -> new HealMold(new StandEntityAction.Builder().resolveLevelToUnlock(4).staminaCostTick(6)
                     .holdType()
 
             ));
