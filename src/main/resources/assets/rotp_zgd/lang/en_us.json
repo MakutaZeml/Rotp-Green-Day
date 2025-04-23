@@ -18,12 +18,13 @@
 
   "rotp_zgd.subtitle.mold": "Green Day mold",
   "rotp_zgd.subtitle.green_day": "Green Day",
-
-
   "effect.rotp_zgd.right_armless": "Right Armless",
   "effect.rotp_zgd.left_armless": "Left Armless",
-
-
+  
   "rotp_zgd.left": "left",
-  "rotp_zgd.right": "right"
+  "rotp_zgd.right": "right",
+
+  "death.attack.mold": "%s has been rotten by mold",
+  "death.attack.mold.player": "%s has been rotten by mold whilst fighting %s",
+  "death.attack.mold.entity": "%s was killed by %s's mold "
 }

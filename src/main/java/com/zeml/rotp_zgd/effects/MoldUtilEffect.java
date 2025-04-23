@@ -33,6 +33,8 @@ public class MoldUtilEffect extends MoldEffect implements IApplicableEffect {
         if(!living.level.isClientSide){
             LazyOptional<LivingData> playerDataOptional = living.getCapability(LivingDataProvider.CAPABILITY);
             playerDataOptional.ifPresent(playerData ->{
+                playerData.setMoldPhase(Math.max(Math.min((playerData.getMaxBlock()-living.blockPosition().getY())/2, 4),0));
+
                 if(living.blockPosition().getY()>playerData.getMaxBlock()){
                     playerData.setMaxBlock(living.blockPosition().getY());
                 }
@@ -48,16 +50,6 @@ public class MoldUtilEffect extends MoldEffect implements IApplicableEffect {
                     playerData.setTicksInMold(0);
                 }
             });
-            if(amplifier > 1){
-                living.addEffect(new EffectInstance(Effects.WEAKNESS,20,amplifier-1,false,false,false));
-            }
-            if(amplifier > 2){
-                living.addEffect(new EffectInstance(Effects.WEAKNESS,20,amplifier-2,false,false,false));
-            }
-            if(amplifier>4){
-                living.addEffect(new EffectInstance(Effects.CONFUSION ,20,amplifier-4,false,false,false));
-
-            }
             List<GreenDayStandEntity> list = MCUtil.entitiesAround(GreenDayStandEntity.class,living,20,false, greenDayStandEntity -> greenDayStandEntity.isAlive() && greenDayStandEntity.getUser() != living);
             if(!list.isEmpty()){
                 list.forEach(greenDayStandEntity -> {

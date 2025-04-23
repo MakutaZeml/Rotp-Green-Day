@@ -34,30 +34,25 @@ public class GreenDayStandEntity extends StandEntity {
                 IStandPower.getStandPowerOptional(user).ifPresent(power -> {
                     LazyOptional<LivingData> playerDataOptional = user.getCapability(LivingDataProvider.CAPABILITY);
                     playerDataOptional.ifPresent(playerData ->{
-                        StandType<?> GD = InitStands.GREEN_DAY_STAND.getStandType();
-                        if(power.getType() != GD){
+                        if(power.getType() != InitStands.GREEN_DAY_STAND.getStandType()){
                             if(!playerData.isMoldActivated()){
                                 playerData.setMoldActivated(false);
                             }
                         }else {
-                            if(!(power.getStandManifestation() instanceof StandEntity)){
-                                playerData.setMoldActivated(false);
-                            }else {
-                                if(playerData.isMoldActivated()){
-                                    List<LivingEntity> set = MCUtil.entitiesAround(LivingEntity.class,user,128,false,LivingEntity::isAlive);
-                                    if(!set.isEmpty()){
-                                        set.forEach(entity -> {
-                                            if(!entity.hasEffect(InitStatusEffect.MOLD_UTIL_EFFECT.get())){
-                                                if(!(entity instanceof StandEntity)){
-                                                    entity.addEffect(new EffectInstance(InitStatusEffect.MOLD_UTIL_EFFECT.get(),Integer.MAX_VALUE,0,false,false,false));
-                                                }
+                            if(playerData.isMoldActivated()){
+                                List<LivingEntity> set = MCUtil.entitiesAround(LivingEntity.class,user,128,false,LivingEntity::isAlive);
+                                if(!set.isEmpty()){
+                                    set.forEach(entity -> {
+                                        if(!entity.hasEffect(InitStatusEffect.MOLD_UTIL_EFFECT.get())){
+                                            if(!(entity instanceof StandEntity)){
+                                                entity.addEffect(new EffectInstance(InitStatusEffect.MOLD_UTIL_EFFECT.get(),Integer.MAX_VALUE,0,false,false,false));
                                             }
-                                        });
-                                    }
-                                    power.consumeStamina(1);
-                                    if(power.getStamina() == 0){
-                                        playerData.setMoldActivated(false);
-                                    }
+                                        }
+                                    });
+                                }
+                                power.consumeStamina(1);
+                                if(power.getStamina() == 0){
+                                    playerData.setMoldActivated(false);
                                 }
                             }
                         }
@@ -73,6 +68,13 @@ public class GreenDayStandEntity extends StandEntity {
     public StandRelativeOffset getDefaultOffsetFromUser() {return offsetDefault;}
 
 
+    @Override
+    public void onRemovedFromWorld() {
+        super.onRemovedFromWorld();
+        if(this.getUser() != null){
+            this.getUser().getCapability(LivingDataProvider.CAPABILITY).ifPresent(livingData -> livingData.setMoldActivated(false));
+        }
+    }
 
     @Override
     public double getMaxRange() {
