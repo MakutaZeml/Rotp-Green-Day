@@ -33,8 +33,6 @@ public class MoldUtilEffect extends MoldEffect implements IApplicableEffect {
         if(!living.level.isClientSide){
             LazyOptional<LivingData> playerDataOptional = living.getCapability(LivingDataProvider.CAPABILITY);
             playerDataOptional.ifPresent(playerData ->{
-                playerData.setMoldPhase(Math.max(Math.min((playerData.getMaxBlock()-living.blockPosition().getY())/2, 4),0));
-
                 if(living.blockPosition().getY()>playerData.getMaxBlock()){
                     playerData.setMaxBlock(living.blockPosition().getY());
                 }
