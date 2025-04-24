@@ -107,7 +107,7 @@ public class InitStands {
                             .tier(6)
                             .power(15.70)
                             .speed(10.0)
-                            .range(2.0, 256.0)
+                            .range(2.0, 128.0)
                             .durability(15.0)
                             .precision(4.0)
                             .build("Green Day"),
