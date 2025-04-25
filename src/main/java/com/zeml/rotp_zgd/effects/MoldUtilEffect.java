@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class MoldUtilEffect extends MoldEffect implements IApplicableEffect {
+public class MoldUtilEffect extends MoldEffect {
 
 
     public MoldUtilEffect(int liquidColor) {
@@ -48,25 +48,6 @@ public class MoldUtilEffect extends MoldEffect implements IApplicableEffect {
                     playerData.setTicksInMold(0);
                 }
             });
-            List<GreenDayStandEntity> list = MCUtil.entitiesAround(GreenDayStandEntity.class,living,20,false, greenDayStandEntity -> greenDayStandEntity.isAlive() && greenDayStandEntity.getUser() != living);
-            if(!list.isEmpty()){
-                list.forEach(greenDayStandEntity -> {
-                    LivingEntity owner = greenDayStandEntity.getUser();
-                    if(owner != null && owner.isAlive()){
-                        LazyOptional<LivingData> livingDataLazyOptional = owner.getCapability(LivingDataProvider.CAPABILITY);
-                        if(!livingDataLazyOptional.map(LivingData::isMoldActivated).orElse(false)){
-                            living.removeEffect(this);
-                            living.getCapability(LivingDataProvider.CAPABILITY).ifPresent(livingData -> livingData.setTicksInMold(0));
-                        }
-                    }else {
-                        living.removeEffect(this);
-                        living.getCapability(LivingDataProvider.CAPABILITY).ifPresent(livingData -> livingData.setTicksInMold(0));
-                    }
-                });
-            }else {
-                living.removeEffect(this);
-                living.getCapability(LivingDataProvider.CAPABILITY).ifPresent(livingData -> livingData.setTicksInMold(0));
-            }
         }
     }
 
@@ -78,17 +59,6 @@ public class MoldUtilEffect extends MoldEffect implements IApplicableEffect {
                 playerData.setMaxBlock(living.blockPosition().getY());
             });
         }
-    }
-
-
-    @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
-        return true;
-    }
-
-    @Override
-    public boolean isApplicable(LivingEntity entity) {
-        return !isUndead(entity);
     }
 
 

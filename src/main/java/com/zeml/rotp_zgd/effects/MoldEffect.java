@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class MoldEffect extends Effect {
+public class MoldEffect extends Effect implements IApplicableEffect{
     public MoldEffect( int liquidColor) {
         super(EffectType.HARMFUL, liquidColor);
     }
@@ -70,5 +70,9 @@ public class MoldEffect extends Effect {
         return Collections.emptyList();
     }
 
+    @Override
+    public boolean isApplicable(LivingEntity entity) {
+        return !MoldUtilEffect.isUndead(entity);
+    }
 
 }

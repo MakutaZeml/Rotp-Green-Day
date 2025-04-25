@@ -15,7 +15,9 @@ import com.zeml.rotp_zgd.init.InitStands;
 import com.zeml.rotp_zgd.init.InitStatusEffect;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.Hand;
 import net.minecraft.util.HandSide;
@@ -26,6 +28,7 @@ import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -39,76 +42,6 @@ import java.util.Set;
 
 @Mod.EventBusSubscriber(modid = RotpGreenDayAddon.MOD_ID)
 public class GameplayHandler {
-
-    /*
-    @SubscribeEvent(priority =  EventPriority.LOW)
-    public static void ArmlessRender(LivingEvent.LivingUpdateEvent event){
-        LivingEntity entity = event.getEntityLiving();
-        if(!entity.level.isClientSide){
-            LazyOptional<LivingData> livingData = entity.getCapability(LivingDataProvider.CAPABILITY);
-            livingData.ifPresent(data ->{
-                if(!data.isHasLeftArm()){
-                    if(!entity.hasEffect(InitStatusEffect.LEFT_ARMLESS.get())){
-                        entity.addEffect(new EffectInstance(InitStatusEffect.LEFT_ARMLESS.get(),Integer.MAX_VALUE,0,false,false,false));
-                    }
-                }else {
-                    entity.removeEffect(InitStatusEffect.LEFT_ARMLESS.get());
-                }
-                if(!data.isHasRightArm()){
-                    if(!entity.hasEffect(InitStatusEffect.RIGHT_ARMLESS.get())){
-                        entity.addEffect(new EffectInstance(InitStatusEffect.RIGHT_ARMLESS.get(),Integer.MAX_VALUE,0,false,false,false));
-                    }
-                }else {
-                    entity.removeEffect(InitStatusEffect.RIGHT_ARMLESS.get());
-                }
-
-
-            });
-        }
-    }
-    */
-
-
-    /*
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public static void onDeleteEvent(LivingEvent.LivingUpdateEvent event){
-        LivingEntity user = event.getEntityLiving();
-        if(!user.level.isClientSide){
-            IStandPower.getStandPowerOptional(user).ifPresent(power -> {
-                LazyOptional<LivingData> playerDataOptional = user.getCapability(LivingDataProvider.CAPABILITY);
-                playerDataOptional.ifPresent(playerData ->{
-                    StandType<?> GD = InitStands.GREEN_DAY_STAND.getStandType();
-                    if(power.getType() != GD){
-                        if(!playerData.isMoldActivated()){
-                            playerData.setMoldActivated(false);
-                        }
-                    }else {
-                        if(!(power.getStandManifestation() instanceof StandEntity)){
-                            playerData.setMoldActivated(false);
-                        }else {
-                            if(playerData.isMoldActivated()){
-                                List<LivingEntity> set = MCUtil.entitiesAround(LivingEntity.class,user,256,false,LivingEntity::isAlive);
-                                if(!set.isEmpty()){
-                                    set.forEach(entity -> {
-                                        if(!entity.hasEffect(InitStatusEffect.MOLD_UTIL_EFFECT.get())){
-                                            if(!(entity instanceof StandEntity)){
-                                                entity.addEffect(new EffectInstance(InitStatusEffect.MOLD_UTIL_EFFECT.get(),Integer.MAX_VALUE,0,false,false,false));
-                                            }
-                                        }
-                                    });
-                                }
-                                power.consumeStamina(1);
-                                if(power.getStamina() == 0){
-                                    playerData.setMoldActivated(false);
-                                }
-                            }
-                        }
-                    }
-                });
-            });
-        }
-    }
-     */
 
 
     @SubscribeEvent
@@ -154,6 +87,18 @@ public class GameplayHandler {
         }
     }
 
+    @SubscribeEvent
+    public static void onRemovePotionEffect(PotionEvent.PotionExpiryEvent event){
+        if(!event.getEntity().level.isClientSide){
+            if(event.getPotionEffect().getEffect() == InitStatusEffect.MOLD_UTIL_EFFECT.get()){
+                LivingEntity living = event.getEntityLiving();
+                living.getCapability(LivingDataProvider.CAPABILITY).ifPresent(livingData -> {
+                    livingData.setMaxBlock(0);
+                });
+            }
+        }
+    }
+
 
     //Green Day Armless stuff
 
@@ -162,7 +107,9 @@ public class GameplayHandler {
         LivingEntity entity = event.getEntityLiving();
         if((entity.getMainArm() == HandSide.RIGHT && entity.hasEffect(InitStatusEffect.RIGHT_ARMLESS.get()))
                 ||(entity.getMainArm() == HandSide.LEFT && entity.hasEffect(InitStatusEffect.LEFT_ARMLESS.get()))){
-            event.setCanceled(true);
+            if(!entity.level.isClientSide){
+                event.setCanceled(true);
+            }
         }
     }
 
@@ -170,7 +117,7 @@ public class GameplayHandler {
     public static void onItemPickup(EntityItemPickupEvent event){
         LivingEntity entity = event.getEntityLiving();
         if(entity.hasEffect(InitStatusEffect.RIGHT_ARMLESS.get()) && entity.hasEffect(InitStatusEffect.LEFT_ARMLESS.get())){
-            event.setCanceled(true);
+            if(!entity.level.isClientSide) event.setCanceled(true);
         }
     }
 
@@ -178,20 +125,31 @@ public class GameplayHandler {
     public static void onBlockPlace(BlockEvent.EntityPlaceEvent event){
         if(event.getEntity() instanceof LivingEntity){
             LivingEntity entity = (LivingEntity) event.getEntity();
-            if((entity.getMainArm() == HandSide.RIGHT && entity.hasEffect(InitStatusEffect.RIGHT_ARMLESS.get()))
-                    ||(entity.getMainArm() == HandSide.LEFT && entity.hasEffect(InitStatusEffect.LEFT_ARMLESS.get()))){
-                event.setCanceled(true);
+            if((entity.getMainArm() == HandSide.RIGHT && entity.hasEffect(InitStatusEffect.RIGHT_ARMLESS.get()) && entity.getUsedItemHand() == Hand.MAIN_HAND)
+                    || (entity.getMainArm() == HandSide.LEFT && entity.hasEffect(InitStatusEffect.LEFT_ARMLESS.get()) && entity.getUsedItemHand() == Hand.OFF_HAND)
+                    ||(entity.getMainArm() == HandSide.LEFT && entity.hasEffect(InitStatusEffect.LEFT_ARMLESS.get()) && entity.getUsedItemHand() == Hand.MAIN_HAND)
+                    ||(entity.getMainArm() == HandSide.LEFT && entity.hasEffect(InitStatusEffect.RIGHT_ARMLESS.get()) && entity.getUsedItemHand() == Hand.OFF_HAND)
+            ){
+                if(!entity.level.isClientSide){
+                    ItemEntity item = new ItemEntity(entity.level,entity.getX(),entity.getY(),entity.getZ(),new ItemStack(event.getPlacedBlock().getBlock().asItem()));
+                    entity.level.addFreshEntity(item);
+                    event.setCanceled(true);
+                }
+
             }
         }
     }
 
     @SubscribeEvent
     public static void onEntityAttack(LivingAttackEvent event){
-        LivingEntity entity = event.getEntityLiving();
-        if((entity.getMainArm() == HandSide.RIGHT && entity.hasEffect(InitStatusEffect.RIGHT_ARMLESS.get()))
-                ||(entity.getMainArm() == HandSide.LEFT && entity.hasEffect(InitStatusEffect.LEFT_ARMLESS.get()))){
-            event.setCanceled(true);
+        if(event.getSource().getEntity() instanceof  LivingEntity){
+            LivingEntity entity = (LivingEntity) event.getSource().getEntity();
+            if((entity.getMainArm() == HandSide.RIGHT && entity.hasEffect(InitStatusEffect.RIGHT_ARMLESS.get()))
+                    ||(entity.getMainArm() == HandSide.LEFT && entity.hasEffect(InitStatusEffect.LEFT_ARMLESS.get()))){
+                if(!entity.level.isClientSide) event.setCanceled(true);
+            }
         }
+
     }
 
     @SubscribeEvent
@@ -200,7 +158,7 @@ public class GameplayHandler {
         Hand hand = event.getHand();
         if((hand == Hand.MAIN_HAND && entity.getMainArm() == HandSide.RIGHT &&entity.hasEffect(InitStatusEffect.RIGHT_ARMLESS.get()))||
                 (hand == Hand.MAIN_HAND && entity.getMainArm() == HandSide.LEFT &&entity.hasEffect(InitStatusEffect.LEFT_ARMLESS.get()))){
-            event.setCanceled(true);
+            if(!entity.level.isClientSide) event.setCanceled(true);
         }
     }
 

@@ -1,0 +1,29 @@
+{
+  "entity.rotp_zgd.green_day": "青春岁月",
+  "stand.rotp_zgd.green_day": "青春岁月",
+
+  "action.rotp_zgd.gd_punch": "轻击",
+  "action.rotp_zgd.gd_heavy_punch": "重拳",
+  "action.rotp_zgd.gd_barrage": "连打",
+  "action.rotp_zgd.gd_combo_punch": "终结之拳",
+  "action.rotp_zgd.gd_shot_left_arm": "发射左手臂",
+  "action.rotp_zgd.gd_shot_right_arm": "发射右手臂",
+
+  "action.rotp_zgd.gd_block": "防御",
+  "action.rotp_zgd.gd_mold": "“霉菌时间!”",
+  "action.rotp_zgd.gd_heal": "霉菌治愈",
+
+  "effect.rotp_zgd.mold": "生霉",
+  "effect.rotp_zgd.mold_util": "霉菌侵染",
+
+  "rotp_zgd.subtitle.mold": "青春岁月释放霉菌",
+  "rotp_zgd.subtitle.green_day": "青春岁月",
+
+
+  "effect.rotp_zgd.right_armless": "失去右手臂",
+  "effect.rotp_zgd.left_armless": "失去左手臂",
+
+
+  "rotp_zgd.left": "左",
+  "rotp_zgd.right": "右"
+}

@@ -40,13 +40,11 @@ public class GreenDayStandEntity extends StandEntity {
                             }
                         }else {
                             if(playerData.isMoldActivated()){
-                                List<LivingEntity> set = MCUtil.entitiesAround(LivingEntity.class,user,this.getMaxRange(),false,LivingEntity::isAlive);
+                                List<LivingEntity> set = MCUtil.entitiesAround(LivingEntity.class,user,128,false,LivingEntity::isAlive);
                                 if(!set.isEmpty()){
                                     set.forEach(entity -> {
-                                        if(!entity.hasEffect(InitStatusEffect.MOLD_UTIL_EFFECT.get())){
-                                            if(!(entity instanceof StandEntity)){
-                                                entity.addEffect(new EffectInstance(InitStatusEffect.MOLD_UTIL_EFFECT.get(),Integer.MAX_VALUE,0,false,false,false));
-                                            }
+                                        if(!(entity instanceof StandEntity)){
+                                            entity.addEffect(new EffectInstance(InitStatusEffect.MOLD_UTIL_EFFECT.get(),40,0,false,false,false));
                                         }
                                     });
                                 }

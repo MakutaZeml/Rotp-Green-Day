@@ -24,7 +24,7 @@ public class InitStatusEffect {
             ()-> new MoldUtilEffect(0x465D58));
 
 
-        public static final RegistryObject<Effect> RIGHT_ARMLESS = EFFECTS.register("right_armless",
+    public static final RegistryObject<Effect> RIGHT_ARMLESS = EFFECTS.register("right_armless",
             ()->new RigthArmLessEffect(0xFF0000));
 
 
@@ -34,6 +34,7 @@ public class InitStatusEffect {
     
     public static void afterEffectsRegister() {
         ModStatusEffects.setEffectAsTracked(
+                MOLD_EFFECT.get(),
                 RIGHT_ARMLESS.get(), 
                 LEFT_ARMLESS.get());
     }

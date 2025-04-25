@@ -64,7 +64,6 @@ public class ShootingArmEntity extends ModdedProjectileEntity {
         if(!this.isOnGround()){
             this.setDeltaMovement(this.getDeltaMovement().add(0,-.08F,0));
         }
-        System.out.println(this.getDeltaMovement());
 
         this.setNoGravity(false);
 

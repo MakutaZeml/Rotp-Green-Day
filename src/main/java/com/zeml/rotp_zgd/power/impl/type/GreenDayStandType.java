@@ -1,10 +1,12 @@
 package com.zeml.rotp_zgd.power.impl.type;
 
 import com.github.standobyte.jojo.action.stand.StandAction;
+import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.github.standobyte.jojo.power.impl.stand.stats.StandStats;
 import com.github.standobyte.jojo.power.impl.stand.type.EntityStandType;
 import com.github.standobyte.jojo.power.impl.stand.type.StandType;
+import com.zeml.rotp_zgd.capability.entity.LivingDataProvider;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.text.ITextComponent;
 import org.jetbrains.annotations.Nullable;
@@ -23,6 +25,13 @@ public class GreenDayStandType  <T extends StandStats> extends EntityStandType<T
     @Override
     public void tickUser(LivingEntity user, IStandPower power) {
         super.tickUser(user, power);
+        if(!(power.getStandManifestation() instanceof StandEntity)){
+            user.getCapability(LivingDataProvider.CAPABILITY).ifPresent(livingData -> {
+                if(livingData.isMoldActivated()){
+                    livingData.setMoldActivated(false);
+                }
+            });
+        }
     }
 
 

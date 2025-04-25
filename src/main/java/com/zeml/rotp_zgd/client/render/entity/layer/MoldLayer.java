@@ -61,6 +61,9 @@ public class MoldLayer <T extends LivingEntity, M extends EntityModel<T>> extend
         return null;
     }
 
+
+
+
     @Override
     public void renderHandFirstPerson(HandSide side, MatrixStack matrixStack,
                                       IRenderTypeBuffer buffer, int light, AbstractClientPlayerEntity player,
@@ -69,6 +72,7 @@ public class MoldLayer <T extends LivingEntity, M extends EntityModel<T>> extend
         IFirstPersonHandLayer.defaultRender(side, matrixStack, buffer, light, player, playerRenderer,
                 model, getTexture(model, player));
     }
+
 
 
     private Map<HamonBurnLayer.TextureSize, ResourceLocation[]> LAYER_TEXTURES_MOLD;
