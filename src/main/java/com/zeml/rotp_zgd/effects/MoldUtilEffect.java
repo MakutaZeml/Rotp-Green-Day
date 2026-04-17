@@ -1,5 +1,7 @@
 package com.zeml.rotp_zgd.effects;
 
+import com.github.standobyte.jojo.capability.entity.LivingUtilCap;
+import com.github.standobyte.jojo.capability.entity.LivingUtilCapProvider;
 import com.github.standobyte.jojo.init.power.non_stand.ModPowers;
 import com.github.standobyte.jojo.potion.IApplicableEffect;
 import com.github.standobyte.jojo.power.impl.nonstand.INonStandPower;
@@ -19,6 +21,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 public class MoldUtilEffect extends MoldEffect {
 
@@ -63,7 +66,8 @@ public class MoldUtilEffect extends MoldEffect {
 
 
     public static boolean isUndead(LivingEntity entity) {
-        if (entity.getMobType() == CreatureAttribute.UNDEAD) {
+        Optional<LivingUtilCap> cap = entity.getCapability(LivingUtilCapProvider.CAPABILITY).resolve();
+        if (entity.getMobType() == CreatureAttribute.UNDEAD || ((cap.isPresent()) && cap.get().isDyingBody())) {
             return true;
         }else  {
             return isLivingJojoZombie((entity));
